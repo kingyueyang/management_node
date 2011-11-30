@@ -42,6 +42,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#include "log.h"
+
 #define	PORT 8888			/* Listening port */
 
 #endif
