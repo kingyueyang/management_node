@@ -27,6 +27,8 @@ test_request_cb(struct evhttp_request *req, void *arg) {
     if (EVHTTP_REQ_GET != evhttp_request_get_command(req)) {
         evhttp_send_reply(req, 500, "not support this method", NULL);
         /*log it*/
+        printf("inot support this method\n");
+        return;
     }
 
     /*
@@ -42,8 +44,8 @@ test_request_cb(struct evhttp_request *req, void *arg) {
 
 static void
 other_cb(struct evhttp_request *req, void *arg) {
-    printf("other test\n");
-    evhttp_send_reply(req, 200, "OK", NULL);
+    printf("other path\n");
+    evhttp_send_reply(req, 400, "olo", NULL);
 }
 
 static void
@@ -59,9 +61,11 @@ main ( int argc, char *argv[] ) {
 
     unsigned short port = PORT;
 
+    /* As you konw */
     if (signal(SIGPIPE, SIG_IGN) == SIG_ERR)
         return (1);
 
+    /* Create a new base evObject */
     base = event_base_new();
     if (!base) {
         fprintf(stderr, "Couldn't create an event_base: exiting\n");

@@ -28,10 +28,25 @@ def post(url, c_type, header, string):
         print resopne.read()
 
 def get(url, method, path):
+    conn = None
     conn = httplib.HTTPConnection(url)
-    conn.request(method, path)
+    try:
+        conn.request(method, path)
+    except:
+        print "get: socket error"
+        return
     rc = conn.getresponse()
+
     print rc.status, rc.reason
 
 if __name__ == '__main__':
+    print "GET: /get"
     get('10.10.140.215:8888', 'GET', '/get')
+    print "\n"
+
+    print "POST: /get"
+    get('10.10.140.215:8888', 'POST', '/get')
+    print "\n"
+
+    print "GET: /xxx"
+    get('10.10.140.215:8888', 'GET', '/xxx')
