@@ -1,4 +1,4 @@
-all:http_server
+all:http-server
 
 CC= gcc -std=c99
 FLAGS= -g -Wall -O0
@@ -6,10 +6,10 @@ LAB= -levent
 BIN=./bin
 SRC=./src
 
-http_server.o:src/http_server.c
+http-server.o:src/http-server.c
 	${CC} ${FLAGS} -c $< ${SRC}/$@
 
-http_server:src/http_server.o
+http-server:src/http-server.o
 	${CC} ${FLAGS} -o ${BIN}/$@ $^ ${LAB}
 
 .PYHON:
