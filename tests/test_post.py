@@ -37,7 +37,8 @@ def get(url, method, path):
         return
     rc = conn.getresponse()
 
-    print rc.status, rc.reason
+    buf = rc.read()
+    print rc.status, rc.reason, buf
 
 if __name__ == '__main__':
     print "GET: /get"

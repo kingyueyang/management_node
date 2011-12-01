@@ -101,11 +101,12 @@ test_request_cb(struct evhttp_request *req, void *arg) {
 
 static int
 gen_data(char **r_data) {
-    *r_data = malloc(6);
+    *r_data = malloc(4);
     /*
      *Test data
      */
-    sprintf(*r_data, "test");
+    char tmp[] = "yy.";
+    sprintf(*r_data, tmp);
 
     return 0;
 }
