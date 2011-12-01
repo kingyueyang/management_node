@@ -18,41 +18,6 @@
 
 #include "http-server.h"
 
-static void
-test_request_cb(struct evhttp_request *req, void *arg) {
-    struct evbuffer *buf = evbuffer_new();
-    static char test_char[] = 
-        "ok, you get this message";
-
-    if (EVHTTP_REQ_GET != evhttp_request_get_command(req)) {
-        evhttp_send_reply(req, 500, "not support this method", NULL);
-        /*log it*/
-        printf("inot support this method\n");
-        return;
-    }
-
-    /*
-     *TODO: log received a right GET message
-     */
-
-    evbuffer_add(buf, test_char, sizeof(test_char) - 1);
-    evhttp_send_reply(req, 200, "OK", buf);
-    printf("test get\n");
-
-    evbuffer_free(buf);
-}
-
-static void
-other_cb(struct evhttp_request *req, void *arg) {
-    printf("other path\n");
-    evhttp_send_reply(req, 400, "olo", NULL);
-}
-
-static void
-syntax(void) {
-    fprintf(stdout, "Syntax: http_server <docroot>\n");
-}
-
 int
 main ( int argc, char *argv[] ) {
     struct event_base *base;
@@ -100,3 +65,47 @@ main ( int argc, char *argv[] ) {
     return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */
 
+static void
+other_cb(struct evhttp_request *req, void *arg) {
+    printf("other path\n");
+    evhttp_send_reply(req, 400, "olo", NULL);
+}
+
+static void
+test_request_cb(struct evhttp_request *req, void *arg) {
+    struct evbuffer *buf = evbuffer_new();
+
+    if (EVHTTP_REQ_GET != evhttp_request_get_command(req)) {
+        evhttp_send_reply(req, 500, "not support this method", NULL);
+        /*log it*/
+        printf("inot support this method\n");
+        return;
+    }
+
+    /*
+     *TODO: log received a right GET message
+     */
+    static char test_char[] = 
+        "ok, you get this message";
+    char *msg = NULL;
+    gen_data(&msg);
+    /*printf("%s\n", msg);*/
+
+    evbuffer_add(buf, msg, sizeof(test_char) - 1);
+    evhttp_send_reply(req, 200, "OK", buf);
+    printf("test get\n");
+
+    free(msg);
+    evbuffer_free(buf);
+}
+
+static int
+gen_data(char **r_data) {
+    *r_data = malloc(6);
+    /*
+     *Test data
+     */
+    sprintf(*r_data, "test");
+
+    return 0;
+}
