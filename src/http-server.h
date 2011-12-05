@@ -46,6 +46,8 @@
 
 #define	PORT 8888			/* Listening port */
 
+#define	PRINT(x) printf("%d\n", (x))			/* Debug Macro */
+
 static void test_request_cb(struct evhttp_request *req, void *arg);
 static void other_cb(struct evhttp_request *req, void *arg);
 static int gen_data(char **r_data);

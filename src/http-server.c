@@ -69,6 +69,7 @@ static void
 other_cb(struct evhttp_request *req, void *arg) {
     printf("other path\n");
     evhttp_send_reply(req, 400, "olo", NULL);
+    return;
 }
 
 static void
@@ -78,35 +79,56 @@ test_request_cb(struct evhttp_request *req, void *arg) {
     if (EVHTTP_REQ_GET != evhttp_request_get_command(req)) {
         evhttp_send_reply(req, 500, "not support this method", NULL);
         /*log it*/
-        printf("inot support this method\n");
+        printf("not support this method\n");
+        evbuffer_free(buf);
         return;
     }
 
-    /*
-     *TODO: log received a right GET message
-     */
     static char test_char[] = 
         "ok, you get this message";
     char *msg = NULL;
     gen_data(&msg);
-    /*printf("%s\n", msg);*/
+    printf("out: %s\n", msg);
 
-    evbuffer_add(buf, msg, sizeof(test_char) - 1);
+    evbuffer_add(buf, msg, strlen(msg));
     evhttp_send_reply(req, 200, "OK", buf);
     printf("test get\n");
+    printf("====================\n");
 
-    free(msg);
     evbuffer_free(buf);
+    free(msg);
+    msg = NULL;
+    return ;
 }
 
 static int
 gen_data(char **r_data) {
-    *r_data = malloc(4);
-    /*
-     *Test data
-     */
-    char tmp[] = "yy.";
-    sprintf(*r_data, tmp);
+    FILE *fp = NULL;
+    long file_size;
+    size_t sz; 
+
+    /* Get file size */
+    fp = fopen("./data/node_conf.xml", "r");
+    if (NULL == fp) {
+        fprintf(stderr, "Open file failed.\n");
+        return -1;
+    }
+    fseek(fp, 0L, SEEK_END);
+    file_size = ftell(fp);
+
+    *r_data = malloc(file_size+1);
+
+    PRINT(file_size);
+
+    /* Set seek to beginbing */
+    fseek(fp, 0L, SEEK_SET);
+
+    /* Read file */
+    size_t rc = fread(*r_data, file_size, 1, fp);
+
+    fclose(fp);
+    fp = NULL;
 
     return 0;
 }
+

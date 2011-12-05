@@ -25,5 +25,5 @@
 
 #endif
 
-void log(const char* tag, const char* message);
+void node_log(const char* tag, const char* message);
 

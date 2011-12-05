@@ -19,17 +19,18 @@
 
 #include "log.h"
 
-void
-log(const char* tag, const char* message) {
+void 
+node_log(const char* tag, const char* message) {
     time_t now;
     time(&now);
-    printf("%s [%s]: %s\n", ctime(&now), tag, message);
+    printf("%s [%s]: %s\n", ctime(&now), tag, message); 
 }
-
+    
 #ifdef DEBUG
+
 int
 main ( int argc, char *argv[] ) {
-    log("redis", "crash");
+    node_log("redis", "crash");
     return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */
 #endif

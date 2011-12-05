@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<sharding>
+    <title>shareding-node</title>
+    <max-load>15</max-load>
+</sharding>

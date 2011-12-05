@@ -35,7 +35,11 @@ def get(url, method, path):
     except:
         print "get: socket error"
         return
-    rc = conn.getresponse()
+    try:
+        rc = conn.getresponse()
+    except:
+        print "error"
+        return
 
     buf = rc.read()
     print rc.status, rc.reason, buf
@@ -51,3 +55,4 @@ if __name__ == '__main__':
 
     print "GET: /xxx"
     get('10.10.140.215:8888', 'GET', '/xxx')
+
