@@ -44,8 +44,17 @@ main ( int argc, char *argv[] ) {
         return 1;
     }
 
-    /* The /get will be output to 1 and say 200 ok. */
-    evhttp_set_cb(http, "/get", test_request_cb, NULL);
+    /*
+     * The path /get support get method, it saved sharding configure
+     * When GET /get will be return configure xml, and 200 OK
+     */
+    evhttp_set_cb(http, "/get", get_config_cb, NULL);
+
+    /*
+     * The path /post support post method
+     * When sharding node need to be grant, it can post request
+     */
+    evhttp_set_cb(http, "/post", post_grant_cb, NULL);
 
     /* We want to accept arbitrary requests, so we need to set a "generic"
      * cb.  We can also add callbacks for specific paths. */
@@ -73,13 +82,13 @@ other_cb(struct evhttp_request *req, void *arg) {
 }
 
 static void
-test_request_cb(struct evhttp_request *req, void *arg) {
+get_config_cb(struct evhttp_request *req, void *arg) {
     struct evbuffer *buf = evbuffer_new();
 
     if (EVHTTP_REQ_GET != evhttp_request_get_command(req)) {
         evhttp_send_reply(req, 500, "not support this method", NULL);
         /*log it*/
-        printf("not support this method\n");
+        printf("/get not support this method\n");
         evbuffer_free(buf);
         return;
     }
@@ -98,6 +107,45 @@ test_request_cb(struct evhttp_request *req, void *arg) {
     evbuffer_free(buf);
     free(msg);
     msg = NULL;
+    return ;
+}
+
+static void
+post_grant_cb(struct evhttp_request *req, void *arg) {
+    struct evbuffer *buf;
+    char cbuf[4];
+    char *buffer = NULL;
+
+    if (EVHTTP_REQ_POST != evhttp_request_get_command(req)) {
+        evhttp_send_reply(req, 500, "not support this method", NULL);
+        /*log it*/
+        printf("/post not support this method\n");
+        return;
+    }
+
+    buf = evhttp_request_get_input_buffer(req);
+    size_t sz = evbuffer_get_length(buf);
+
+    buffer = malloc(sz);
+    if (NULL == buffer) {
+        evhttp_send_reply(req, 500, "alloc memroy error", NULL);
+        return ;
+    }
+
+    /* Init temp buffer */
+    memset(buffer, 0, sz);
+    while (evbuffer_get_length(buf)) {
+        int n;
+        n = evbuffer_remove(buf, cbuf, sizeof(buf)-1);
+        strcat(buffer, cbuf);
+    }
+    parser(buffer, sz);
+
+    free(buffer);
+    buffer = NULL;
+
+    printf("\npost request\n");
+    evhttp_send_reply(req, 200, "OK", NULL);
     return ;
 }
 
@@ -130,5 +178,24 @@ gen_data(char **r_data) {
     fp = NULL;
 
     return 0;
+}
+
+static void
+parser(char *buf, size_t size) {
+    char *per_parser = NULL;
+    per_parser = malloc(size);
+    if (NULL == per_parser) {
+        return ;
+    }
+    sprintf(per_parser, buf);
+
+    printf("\n%s\n", per_parser);
+
+    /*
+     *add parser XML 
+     */
+
+    free(per_parser);
+    return ;
 }
 
