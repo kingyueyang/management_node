@@ -116,6 +116,8 @@ post_grant_cb(struct evhttp_request *req, void *arg) {
     char cbuf[4];
     char *buffer = NULL;
 
+    printf("POST Request\n");
+
     if (EVHTTP_REQ_POST != evhttp_request_get_command(req)) {
         evhttp_send_reply(req, 500, "not support this method", NULL);
         /*log it*/
@@ -144,7 +146,6 @@ post_grant_cb(struct evhttp_request *req, void *arg) {
     free(buffer);
     buffer = NULL;
 
-    printf("\npost request\n");
     evhttp_send_reply(req, 200, "OK", NULL);
     return ;
 }
@@ -198,9 +199,8 @@ parser(char *buf, size_t size) {
     }
 
     /* Init child pointer */
-    xmlChar *id, *type;
-    xmlNodePtr child = NULL;
-    id = type = NULL;
+    char *name = NULL;
+    xmlChar *content = NULL;
 
     if (cur->type != XML_ELEMENT_NODE) {
         goto CLEANUP;
@@ -208,8 +208,6 @@ parser(char *buf, size_t size) {
 
     cur = cur->xmlChildrenNode;
 
-    char *name = NULL;
-    char *content = NULL;
     while (cur != NULL) {
         name = (char*)(cur->name); 
         content = xmlNodeGetContent(cur);
@@ -217,18 +215,17 @@ parser(char *buf, size_t size) {
         printf("%s\n", content);
         cur = cur->xmlChildrenNode;
     }
+    printf("\n");
 
-    xmlDocDump(stdout, doc);
+    /*xmlDocDump(stdout, doc);*/
 
 CLEANUP:
-    if (id) {
-        xmlFree(id);
-    }
-    if (type) {
-        xmlFree(type);
+    if (content) {
+        xmlFree(content);
     }
 
     xmlFreeDoc(doc);
+    xmlCleanupParser();
 
     return ;
 }
