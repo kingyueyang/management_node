@@ -76,7 +76,7 @@ main ( int argc, char *argv[] ) {
 
 static void
 other_cb(struct evhttp_request *req, void *arg) {
-    printf("other path\n");
+    printf("Other Path\n");
     evhttp_send_reply(req, 400, "olo", NULL);
     return;
 }
@@ -88,7 +88,7 @@ get_config_cb(struct evhttp_request *req, void *arg) {
     if (EVHTTP_REQ_GET != evhttp_request_get_command(req)) {
         evhttp_send_reply(req, 500, "not support this method", NULL);
         /*log it*/
-        printf("/get not support this method\n");
+        printf("/get Not Support This Method\n");
         evbuffer_free(buf);
         return;
     }

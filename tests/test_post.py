@@ -53,10 +53,10 @@ if __name__ == '__main__':
     print "POST: /post"
     get('10.10.140.215:8888', 'POST', '/post')
 
-    #print "POST: /get"
-    #get('10.10.140.215:8888', 'POST', '/get')
-    #print "\n"
+    print "POST: /get"
+    get('10.10.140.215:8888', 'POST', '/get')
+    print "\n"
 
-    #print "GET: /xxx"
-    #get('10.10.140.215:8888', 'GET', '/xxx')
+    print "GET: /xxx"
+    get('10.10.140.215:8888', 'GET', '/xxx')
 
