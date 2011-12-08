@@ -213,10 +213,11 @@ parser(char *buf, size_t size) {
         content = xmlNodeGetContent(cur);
         printf("%s:", name);
         printf("%s\n", content);
-        cur = cur->xmlChildrenNode;
+        cur = cur->next;
     }
     printf("\n");
 
+    /*TODO: insert to queue*/
     /*xmlDocDump(stdout, doc);*/
 
 CLEANUP:
