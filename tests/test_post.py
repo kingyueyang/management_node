@@ -33,7 +33,7 @@ import urllib
 def get(url, method, path):
     conn = None
     conn = httplib.HTTPConnection(url)
-    params = '<?xml version="1.0"?> <grant> <id>qwert</id> <type>1</type> </grant>\n'
+    params = '<grant> <id>qwert</id> <type>1</type> </grant>\n'
     #headers = {"Content-type": "application/xml", "Accept": "text/plain"}
     try:
         conn.request(method, path, params)

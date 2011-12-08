@@ -42,6 +42,9 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#include <libxml/parser.h>
+#include <libxml/tree.h>
+
 #include "log.h"
 
 #define	PORT 8888			/* Listening port */

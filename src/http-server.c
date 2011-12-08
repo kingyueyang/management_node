@@ -166,8 +166,6 @@ gen_data(char **r_data) {
 
     *r_data = malloc(file_size+1);
 
-    PRINT(file_size);
-
     /* Set seek to beginbing */
     fseek(fp, 0L, SEEK_SET);
 
@@ -182,20 +180,56 @@ gen_data(char **r_data) {
 
 static void
 parser(char *buf, size_t size) {
-    char *per_parser = NULL;
-    per_parser = malloc(size);
-    if (NULL == per_parser) {
-        return ;
+    xmlDocPtr doc = NULL;
+    xmlNodePtr cur = NULL;
+
+    /* Init Root Node */
+    xmlKeepBlanksDefault(0);
+
+    doc = xmlParseMemory(buf, size);
+    if (NULL == doc) {
+        xmlCleanupParser();
     }
-    sprintf(per_parser, buf);
 
-    printf("\n%s\n", per_parser);
+    cur = xmlDocGetRootElement(doc);
+    if (NULL == cur) {
+        xmlFreeDoc(doc);
+        xmlCleanupParser();
+    }
 
-    /*
-     *add parser XML 
-     */
+    /* Init child pointer */
+    xmlChar *id, *type;
+    xmlNodePtr child = NULL;
+    id = type = NULL;
 
-    free(per_parser);
+    if (cur->type != XML_ELEMENT_NODE) {
+        goto CLEANUP;
+    }
+
+    cur = cur->xmlChildrenNode;
+
+    char *name = NULL;
+    char *content = NULL;
+    while (cur != NULL) {
+        name = (char*)(cur->name); 
+        content = xmlNodeGetContent(cur);
+        printf("%s:", name);
+        printf("%s\n", content);
+        cur = cur->xmlChildrenNode;
+    }
+
+    xmlDocDump(stdout, doc);
+
+CLEANUP:
+    if (id) {
+        xmlFree(id);
+    }
+    if (type) {
+        xmlFree(type);
+    }
+
+    xmlFreeDoc(doc);
+
     return ;
 }
 

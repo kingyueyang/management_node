@@ -13,7 +13,7 @@ http-server.o:src/http-server.c
 	${CC} ${FLAGS} -c $< ${SRC}/$@
 
 http-server:src/http-server.o src/log.o
-	${CC} ${FLAGS} -o ${BIN}/$@ $^ ${LAB}
+	${CC} ${FLAGS} -o ${BIN}/$@ $^ ${LAB} `xml2-config --cflags` -lxml2 
 
 .PYHON:
 clean:
