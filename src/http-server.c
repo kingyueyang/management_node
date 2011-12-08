@@ -217,8 +217,11 @@ parser(char *buf, size_t size) {
     }
     printf("\n");
 
-    /*TODO: insert to queue*/
     /*xmlDocDump(stdout, doc);*/
+
+    /*
+     *TODO: insert to queue
+     */
 
 CLEANUP:
     if (content) {
