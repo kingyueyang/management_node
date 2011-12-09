@@ -219,9 +219,13 @@ parser(char *buf, size_t size) {
 
     /*xmlDocDump(stdout, doc);*/
 
+    
     /*
-     *TODO: insert to queue
+     *TODO: Create the Finite State Machine to managent all Clusters and sub-nodes
+     *      Only allow right exchange in sub-nodes 
+     *      PS: think about timestamp ?
      */
+     
 
 CLEANUP:
     if (content) {
