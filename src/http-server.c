@@ -113,7 +113,6 @@ get_config_cb(struct evhttp_request *req, void *arg) {
 static void
 post_grant_cb(struct evhttp_request *req, void *arg) {
     struct evbuffer *buf;
-    char cbuf[4];
     char *buffer = NULL;
 
     printf("POST Request\n");
@@ -138,8 +137,7 @@ post_grant_cb(struct evhttp_request *req, void *arg) {
     memset(buffer, 0, sz);
     while (evbuffer_get_length(buf)) {
         int n;
-        n = evbuffer_remove(buf, cbuf, sizeof(buf)-1);
-        strcat(buffer, cbuf);
+        n = evbuffer_remove(buf, buffer, sz);
     }
     parser(buffer, sz);
 
